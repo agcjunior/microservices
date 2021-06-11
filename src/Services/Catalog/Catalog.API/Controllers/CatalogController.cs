@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Catalog.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller")]
+    [Route("api/v1/[controller]")]
     public class CatalogController : ControllerBase
     {
         private readonly IProductRepository productRepository;
@@ -79,7 +79,7 @@ namespace Catalog.API.Controllers
             return Ok(await productRepository.UpdateProduct(product));            
         }
 
-        [HttpDelete("{id:length(24}", Name = "DeleteProduct")]
+        [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteProduct(string id)
         {
