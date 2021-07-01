@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
 {
-    public class UpdateOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
+    public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
     {
         private readonly IOrderRepository repository;
         private readonly IMapper mapper;        
@@ -22,7 +22,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
             this.logger = logger;
         }
 
-        public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
         {
             var orderToUpdate = await repository.GetByIdAsync(request.Id);
 
@@ -31,7 +31,7 @@ namespace Ordering.Application.Features.Orders.Commands.UpdateOrder
                 throw new NotFoundException(nameof(Order), request.Id);
             }
 
-            mapper.Map(request, orderToUpdate, typeof(DeleteOrderCommand), typeof(Order));
+            mapper.Map(request, orderToUpdate, typeof(UpdateOrderCommand), typeof(Order));
             await repository.UpdateAsync(orderToUpdate);
             logger.LogInformation($"Order {orderToUpdate.Id} is updated");
             return Unit.Value;

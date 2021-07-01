@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Orders.Commands.DeleteOrder
 {
-    public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrederCommand>
+    public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
     {
         private readonly IOrderRepository repository;
         private readonly IMapper mapper;
@@ -26,7 +26,7 @@ namespace Ordering.Application.Features.Orders.Commands.DeleteOrder
             this.logger = logger;
         }
 
-        public async Task<Unit> Handle(DeleteOrederCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
             var orderToDelete = await repository.GetByIdAsync(request.Id);
 
