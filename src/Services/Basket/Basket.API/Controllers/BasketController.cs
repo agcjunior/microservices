@@ -1,11 +1,10 @@
-﻿using Basket.API.Entities;
+﻿using AutoMapper;
+using Basket.API.Entities;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
-using Microsoft.AspNetCore.Http;
+using EventBus.Messages.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -17,11 +16,18 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository basketRepository;
         private readonly DiscountGrpcService discountGrpcService;
+        private readonly IMapper mapper;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public BasketController(IBasketRepository basketRepository, DiscountGrpcService discountGrpcService)
+        public BasketController(IBasketRepository basketRepository,
+            DiscountGrpcService discountGrpcService,
+            IMapper mapper,
+            IPublishEndpoint publishEndpoint)
         {
             this.basketRepository = basketRepository;
             this.discountGrpcService = discountGrpcService;
+            this.mapper = mapper;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [HttpGet("{userName}", Name = "GetBasket")]
@@ -52,6 +58,28 @@ namespace Basket.API.Controllers
         {
             await basketRepository.DeleteBasket(userName);
             return Ok();
+        }
+
+        [Route("[action]")]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            // Obtem o basket pelo UserName
+            var basket = await basketRepository.GetBasket(basketCheckout.UserName);
+            if (basket == null)
+                return BadRequest();
+
+            // Mapear campos para montar o BasketCheckot event e publicar no MassTransit
+            var eventMessage = mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            eventMessage.TotalPrice = basket.TotalPrice;
+            await publishEndpoint.Publish(eventMessage);
+
+            // Remover o Basket
+            await basketRepository.DeleteBasket(basket.UserName);
+
+            return Accepted();
         }
     }
 

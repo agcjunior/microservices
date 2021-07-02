@@ -17,7 +17,7 @@ namespace Basket.API.Repositories
         }
         public async Task DeleteBasket(string userName)
         {
-            await reditCache.RefreshAsync(userName);
+            await reditCache.RemoveAsync(userName);
         }
 
         public async Task<ShoppingCart> GetBasket(string userName)
