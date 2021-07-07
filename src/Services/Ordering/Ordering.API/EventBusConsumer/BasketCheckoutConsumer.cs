@@ -4,9 +4,6 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ordering.API.EventBusConsumer
@@ -30,7 +27,7 @@ namespace Ordering.API.EventBusConsumer
         {
             var command = mapper.Map<CheckoutOrderCommand>(context.Message);
             var result = await mediator.Send(command);
-            logger.LogInformation("BasketCheckout event consumed successfully");
+            logger.LogInformation("BasketCheckout event consumed successfully. Order Created: {newOrderId}", result);
         }
     }
 }

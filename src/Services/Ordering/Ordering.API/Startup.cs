@@ -35,6 +35,7 @@ namespace Ordering.API
 
             // AutoMapper
             services.AddAutoMapper(typeof(Startup));
+            
 
             // MassTransit - Rabbitmq services
             services.AddMassTransit(config =>
@@ -51,6 +52,8 @@ namespace Ordering.API
                 });
             });
             services.AddMassTransitHostedService();
+
+            services.AddScoped<BasketCheckoutConsumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
