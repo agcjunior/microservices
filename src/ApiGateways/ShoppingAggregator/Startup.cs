@@ -27,11 +27,11 @@ namespace ShoppingAggregator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<ICatalogService, CatalogService>(c =>
-                c.BaseAddress = new Uri(Configuration["AppSettings:CatalogUrl"]));
+                c.BaseAddress = new Uri(Configuration["ApiSettings:CatalogUrl"]));
             services.AddHttpClient<IBasketService, BasketService>(c =>
-                c.BaseAddress = new Uri(Configuration["AppSettings:BasketUrl"]));
+                c.BaseAddress = new Uri(Configuration["ApiSettings:BasketUrl"]));
             services.AddHttpClient<IOrderService, OrderService>(c =>
-                c.BaseAddress = new Uri(Configuration["AppSettings:OrderingUrl"]));
+                c.BaseAddress = new Uri(Configuration["ApiSettings:OrderingUrl"]));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
