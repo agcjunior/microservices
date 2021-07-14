@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace ShoppingAggregator.Models
+namespace AspnetRunBasics.Models
 {
     public class BasketModel
     {
         public string Username { get; set; }
-        public List<BasketItemExtendedModel> Items { get; set; } = new List<BasketItemExtendedModel>();
+        public List<BasketItemModel> Items { get; set; } = new List<BasketItemModel>();
         public decimal TotalPrice { get; set; }
     }
 }
